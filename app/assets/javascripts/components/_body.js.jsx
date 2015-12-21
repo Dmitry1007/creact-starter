@@ -7,26 +7,6 @@ var Body = React.createClass({
     $.getJSON('/api/v1/skills.json', (response) => { this.setState({ skills: response }) });
   },
 
-  handleUpdate(skill) {
-    $.ajax({
-      url: `/api/v1/skills/${skill.id}`,
-      type: 'PUT',
-      data: { skill: skill },
-      success: () => {
-        console.log('you updated skill object');
-        // callback to swap objects
-        this.updateSkills(skill);
-      }
-    });
-  },
-
-  updateSkills(skill) {
-    let skills = this.state.skills.filter((s) => { return s.id != skill.id });
-    skills.push(skill);
-
-    this.setState({ skills: skills });
-  },
-
   handleSubmit(skill) {
     let newState = this.state.skills.concat(skill);
     this.setState({ skills: newState })
@@ -48,6 +28,24 @@ var Body = React.createClass({
     });
 
     this.setState({ skills: newSkills });
+  },
+
+  handleUpdate(skill) {
+    $.ajax({
+      url: `/api/v1/skills/${skill.id}`,
+      type: 'PUT',
+      data: { skill: skill },
+      success: (skill) => {
+        this.updateSkills(skill)
+      }
+    });
+  },
+
+  updateSkills(skill) {
+    let skills = this.state.skills.filter((s) => { return s.id != skill.id });
+    skills.push(skill);
+
+    this.setState({ skills: skills });
   },
 
   render() {
